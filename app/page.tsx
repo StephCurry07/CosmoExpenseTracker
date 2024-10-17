@@ -1,101 +1,89 @@
-import Image from "next/image";
+import { CalendarIcon, DollarSignIcon, CreditCardIcon, TrendingUpIcon, BellIcon } from 'lucide-react'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { DatePickerProvider } from '@/components/context/datepicker-provider';
+import { OverviewContextProvider } from '@/components/context/overview-provider';
+import { DateRangePicker } from '@/components/DateRangePicker';
+import { Sidebar } from '@/components/Sidebar';
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+const SummaryCard = ({ title, value, icon: Icon }) => (
+  <Card className="bg-gray-800">
+    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <CardTitle className="text-sm font-medium text-gray-400">{title}</CardTitle>
+      <Icon className="h-4 w-4 text-gray-400" />
+    </CardHeader>
+    <CardContent>
+      <div className="text-2xl font-bold text-white">₹{value}</div>
+    </CardContent>
+  </Card>
+)
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const ReportCard = ({ title, description }) => (
+  <Card className="bg-gray-800">
+    <CardHeader>
+      <CardTitle className="text-lg font-medium text-white">{title}</CardTitle>
+      <p className="text-sm text-gray-400">{description}</p>
+    </CardHeader>
+    <CardContent className="h-48 flex items-center justify-center">
+      <p className="text-gray-500">No data</p>
+    </CardContent>
+  </Card>
+)
+
+export default function FinancialDashboard() {
+  return (		
+    <div className="flex h-screen bg-gray-900 text-white">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex-1 p-8 overflow-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Overview</h1>
+          <div className="flex items-center space-x-4">
+            
+              <DateRangePicker />
+          
+            <Select>
+              <SelectTrigger className="w-[180px] bg-gray-800 border-gray-700">
+                <SelectValue placeholder="Month to Date" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="mtd">Month to Date</SelectItem>
+                <SelectItem value="ytd">Year to Date</SelectItem>
+                <SelectItem value="all">All Time</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+
+        <h2 className="text-xl font-semibold mb-4">Summary</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          <SummaryCard title="TOTAL INCOME" value="0" icon={DollarSignIcon} />
+          <SummaryCard title="AVAILABLE BALANCE" value="0" icon={CreditCardIcon} />
+          <SummaryCard title="TOTAL SPENT" value="0" icon={TrendingUpIcon} />
+          <SummaryCard title="TOTAL INVESTMENT" value="0" icon={TrendingUpIcon} />
+          <SummaryCard title="TOTAL SUBSCRIPTIONS" value="0" icon={BellIcon} />
+        </div>
+
+        <h2 className="text-xl font-semibold mb-4">Reports</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <ReportCard 
+            title="Expenses" 
+            description="Amount spent for the selected date range."
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
+          <ReportCard 
+            title="Subscriptions" 
+            description="Estimated total amount spent for selected date range."
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        </div>
+      </div>
+
+      {/* Floating Action Button */}
+      <Button className="fixed bottom-8 right-8 rounded-full w-14 h-14 text-2xl" size="icon">
+        +
+      </Button>
     </div>
-  );
+  )
 }
