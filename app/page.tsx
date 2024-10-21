@@ -221,7 +221,7 @@ export default function LandingPage() {
               </div>
               <div className="space-x-4">
                 <Link href="/auth">
-                  <Button size="lg" className="text-black bg-gray-200">Get Started Now</Button>
+                  <Button size="lg" className="text-black bg-gray-200 hover:text-white hover:bg-gray-800">Get Started Now</Button>
                 </Link>
               </div>
             </div>

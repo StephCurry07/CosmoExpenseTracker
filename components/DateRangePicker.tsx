@@ -19,21 +19,6 @@ export function DateRangePicker({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const [date, setDate] = React.useState<DateRange | undefined>()
 
-
-  useEffect(() => {
-    if (date?.from && date?.to) {
-      // Call your API function here
-      fetchDataForDateRange(date.from, date.to)
-        .then(data => {
-          // Handle the data returned from the API
-          console.log("Data fetched:", data)
-        })
-        .catch(error => {
-          // Handle any errors
-          console.error("Error fetching data:", error)
-        })
-    }
-  }, [date])
   return (
     <div className={cn("grid gap-2", className)}>
       <Popover>
@@ -77,3 +62,4 @@ export function DateRangePicker({
     </div>
   )
 }
+

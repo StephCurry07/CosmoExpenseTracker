@@ -1,7 +1,11 @@
+'use client';
 import { CalendarIcon, DollarSignIcon, IndianRupeeIcon, CreditCardIcon, TrendingUpIcon, BellIcon } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { DateRangePicker } from '@/components/DateRangePicker';
+import { userStore } from '@/data/users';
+import { expensesStore } from '@/data/expensesStore';
+import { useEffect } from 'react';
 
 interface SummaryCardProps {
   title: string;
@@ -34,6 +38,11 @@ const ReportCard: React.FC<{ title: string; description: string }> = ({ title, d
 )
 
 export default function FinancialDashboard() {
+
+
+  const fetchedExpenses = expensesStore.getExpenses()
+  const total = fetchedExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+
   return (		
     <div className="flex h-screen bg-gray-900 text-white">
 
@@ -43,7 +52,7 @@ export default function FinancialDashboard() {
           <h1 className="text-3xl font-bold">Overview</h1>
           <div className="flex items-center space-x-4">
             
-              <DateRangePicker />
+            <DateRangePicker />
           
             <Select>
               <SelectTrigger className="w-[180px] bg-gray-800 border-gray-700">
@@ -62,9 +71,9 @@ export default function FinancialDashboard() {
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <SummaryCard title="TOTAL INCOME" value="0" icon={IndianRupeeIcon} />
           <SummaryCard title="AVAILABLE BALANCE" value="0" icon={CreditCardIcon} />
-          <SummaryCard title="TOTAL SPENT" value="0" icon={TrendingUpIcon} />
+          <SummaryCard title="TOTAL SPENT" value={total} icon={TrendingUpIcon} />
           <SummaryCard title="TOTAL INVESTMENT" value="0" icon={TrendingUpIcon} />
-          <SummaryCard title="TOTAL SUBSCRIPTIONS" value="0" icon={BellIcon} />
+          <SummaryCard title="TOTAL SUBSCRIPTIONS" value='84.97' icon={BellIcon} />
         </div>
 
         <h2 className="text-xl font-semibold mb-4">Reports</h2>

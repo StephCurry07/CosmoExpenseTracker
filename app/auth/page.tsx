@@ -10,30 +10,157 @@ import { Label } from "@/components/ui/label"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { MailIcon, LockIcon, DollarSign, PieChart, BarChart2, TrendingUp, UserIcon } from 'lucide-react'
+import { userStore } from '../../data/users'
+import {expensesStore } from '../../data/expensesStore'
 
 export default function AuthPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
-  const [email, setEmail] = useState<string>('guest@guest.com'); // Default email
-  const [password, setPassword] = useState<string>('guestinspection');
+  const [email, setEmail] = useState<string>(); // Default email
+  const guestemail = 'guest@guest.com'
+  const guestpass = 'guestinspection'
+  const [password, setPassword] = useState<string>();
+  const [name, setName] = useState<string>('')
+  const [userId, setUserId] = useState<string>();
+
   const router = useRouter()
-  async function onSubmit(event?: React.SyntheticEvent) {
+
+  async function onSignUp(event: React.SyntheticEvent) {
+    event.preventDefault()
+    setIsLoading(true)
+    const createdAt = new Date().toISOString()
+
+    const userData = {
+      name,
+      email,
+      password,
+      createdAt
+    }
+
+    try {
+      const userResponse = await fetch('https://free-ap-south-1.cosmocloud.io/development/api/expensetrackeruser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'projectid': '66e5d8c551335d381ad94a13',
+          'environmentId': '66e5d8c551335d381ad94a14'
+        },
+        body: JSON.stringify(userData),
+      })
+
+      if (!userResponse.ok) {
+        throw new Error('Failed to create account')
+      }
+
+      const user = await userResponse.json()
+      userStore.setUser(user.id, user.name, user.email)
+
+      router.push(`/dashboard/overview`)
+    } catch (error: any) {
+      alert(error.message)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function onSignIn(event: React.SyntheticEvent) {
+    event.preventDefault();
+    setIsLoading(true);
+  
+    try {
+      const response = await fetch('https://free-ap-south-1.cosmocloud.io/development/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'projectid': '66e5d8c551335d381ad94a13',
+          'environmentId': '66e5d8c551335d381ad94a14'
+        },
+        body: JSON.stringify({ email, password }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Invalid email or password');
+      }
+  
+      const user = await response.json();
+      console.log(user);  // Log user object to inspect its structure
+  
+      
+      userStore.setUser(user._id, user.name, user.email);
+      
+  
+      const expResponse = await fetch(`https://free-ap-south-1.cosmocloud.io/development/api/get-expense?limit=5&uid=${user._id}`, {
+        headers: {
+          'projectid': '66e5d8c551335d381ad94a13',
+          'environmentId': '66e5d8c551335d381ad94a14'
+        }
+      });
+  
+      if (!expResponse.ok) {
+        throw new Error('Failed to fetch expenses');
+      }
+  
+      const expensesData = await expResponse.json();
+      expensesStore.setExpenses(expensesData);
+      console.log(expensesStore.getExpenses())
+      setTimeout(function() {
+        console.log("Hello World");
+    }, 2000); // Executes after 2 seconds
+    
+      router.push(`/dashboard/overview`);
+    } catch (error: any) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }
+  
+
+  async function onGuestSubmit(event?: React.SyntheticEvent) {
     event?.preventDefault()
     setIsLoading(true)
 
-    // Simulate API call for authentication
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const guestEmail = 'guest@guest.com'
+    const guestPassword = 'guestinspection'
 
-    // For demonstration, we'll consider the auth successful if both fields are filled
-    if (email && password) {
-      // Redirect to overview page
-      router.push('/dashboard/overview')
-    } else {
-      alert('Please enter both email and password')
+    try {
+      const response = await fetch('https://free-ap-south-1.cosmocloud.io/development/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'projectid': '66e5d8c551335d381ad94a13',
+          'environmentId': '66e5d8c551335d381ad94a14'
+        },
+        body: JSON.stringify({ email: guestEmail, password: guestPassword }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to sign in as guest')
+      }
+
+      const user = await response.json()
+      userStore.setUser(user.id, 'Guest User', guestEmail)
+
+      const expResponse = await fetch(`https://free-ap-south-1.cosmocloud.io/development/api/get-expense?limit=5&uid=${user.id}`, {
+        headers: {
+          'projectid': '66e5d8c551335d381ad94a13',
+          'environmentId': '66e5d8c551335d381ad94a14'
+        }
+      })
+
+      if (!expResponse.ok) {
+        throw new Error('Failed to fetch guest expenses')
+      }
+
+      const expensesData = await expResponse.json()
+      expensesStore.setExpenses(expensesData)
+
+      router.push(`/dashboard/overview`)
+    } catch (error: any) {
+      alert(error.message)
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
-  
 
   const features = [
     { icon: DollarSign, title: "Expense Tracking", description: "Easily categorize and monitor your spending habits." },
@@ -136,7 +263,7 @@ export default function AuthPage() {
                         type="email" 
                         placeholder="m@example.com" 
                         className="pl-8" 
-                        value="" 
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
                     </div>
@@ -148,30 +275,30 @@ export default function AuthPage() {
                       <Input 
                         id="password" 
                         type="password" 
-                        className="pl-8" 
-                        value=""
+                        className="pl-8"
+                        value={password} 
                         onChange={(e) => setPassword(e.target.value)}
                       />
                     </div>
                   </div>
-                  <Button className="w-full" onClick={onSubmit} disabled={isLoading}>
+                  <Button className="w-full" onClick={onSignIn} disabled={isLoading}>
         {isLoading ? "Signing In..." : "Sign In"}
       </Button>
       <div className="text-center mt-4">
-            <Button 
-                variant="outline" 
-                className="w-full" 
-                onClick={() => {
-                // Fill the input fields with guest credentials
-                setEmail('guest@guest.com');
-                setPassword('guestinspection');
-                
-                // Trigger the sign-in process
-                onSubmit();  // Calling without event since it is not a form submission
-                }}
-            >
-                Sign In as Guest
-            </Button>
+          <Button 
+              variant="outline" 
+              className="w-full" 
+              onClick={() => {
+              // Fill the input fields with guest credentials
+              setEmail('guest@guest.com');
+              setPassword('guestinspection');
+              
+              // Trigger the sign-in process
+              onGuestSubmit();  // Calling without event since it is not a form submission
+              }}
+          >
+              Sign In as Guest
+          </Button>
         </div>
                 </CardContent>
               </Card>
@@ -189,26 +316,44 @@ export default function AuthPage() {
                     <Label htmlFor="name">Full Name</Label>
                     <div className="relative">
                       <UserIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="name" placeholder="John Doe" className="pl-8" />
+                      <Input
+                        id="name"
+                        className="pl-8"
+                        placeholder="John Doe"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                      />
                     </div>
                   </div>
                   <div className="space-y-1">
                     <Label htmlFor="email">Email</Label>
                     <div className="relative">
                       <MailIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="email" type="email" placeholder="m@example.com" className="pl-8" />
+                      <Input
+                        id="email"
+                        className="pl-8" 
+                        type="email"
+                        placeholder="m@example.com"
+                        value= {email}
+                        onChange={(e) => setEmail(e.target.value)}/>
                     </div>
                   </div>
                   <div className="space-y-1">
                     <Label htmlFor="password">Password</Label>
                     <div className="relative">
                       <LockIcon className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input id="password" type="password" className="pl-8" />
+                      <Input 
+                        id="password" 
+                        type="password" 
+                        className="pl-8"
+                        value={password} 
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
                     </div>
                   </div>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full" onClick={onSubmit} disabled={isLoading}>
+                  <Button className="w-full" onClick={onSignUp} disabled={isLoading}>
                     {isLoading ? "Creating Account..." : "Create Account"}
                   </Button>
                 </CardFooter>

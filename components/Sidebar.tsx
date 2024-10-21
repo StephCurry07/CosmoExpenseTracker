@@ -21,8 +21,8 @@ export function Sidebar() {
       <SidebarIcon icon={PieChart} href="/dashboard/overview" />
       <SidebarIcon icon={IndianRupeeIcon} href="/dashboard/expenses" />
       <SidebarIcon icon={CreditCardIcon} href="/dashboard/subscriptions" />
-      <SidebarIcon icon={TrendingUpIcon} href="/dashboard/investments" />
-      <SidebarIcon icon={BellIcon} href="#" />
+      {/* <SidebarIcon icon={TrendingUpIcon} href="/dashboard/investments" />
+      <SidebarIcon icon={BellIcon} href="#" /> */}
       <div className="flex-grow" />
       <SidebarIcon icon={HelpCircleIcon} href="#" />
       <SidebarIcon icon={SettingsIcon} href="#" />
