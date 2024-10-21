@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { DollarSignIcon, CreditCardIcon, TrendingUpIcon, BellIcon, HelpCircleIcon, SettingsIcon, LogOutIcon } from 'lucide-react';
+import { IndianRupeeIcon, DollarSignIcon, CreditCardIcon, TrendingUpIcon, BellIcon, HelpCircleIcon, SettingsIcon, LogOutIcon, PieChart } from 'lucide-react';
 
 const SidebarIcon = ({ icon: Icon, href }) => {
   const router = useRouter();
@@ -18,14 +18,15 @@ const SidebarIcon = ({ icon: Icon, href }) => {
 export function Sidebar() {
   return (
     <div className="w-12 bg-gray-800 flex flex-col items-center py-4 space-y-2">
-      <SidebarIcon icon={DollarSignIcon} href="/expenses" />
-      <SidebarIcon icon={CreditCardIcon} href="#" />
-      <SidebarIcon icon={TrendingUpIcon} href="#" />
+      <SidebarIcon icon={PieChart} href="/dashboard/overview" />
+      <SidebarIcon icon={IndianRupeeIcon} href="/dashboard/expenses" />
+      <SidebarIcon icon={CreditCardIcon} href="/dashboard/subscriptions" />
+      <SidebarIcon icon={TrendingUpIcon} href="/dashboard/investments" />
       <SidebarIcon icon={BellIcon} href="#" />
       <div className="flex-grow" />
       <SidebarIcon icon={HelpCircleIcon} href="#" />
       <SidebarIcon icon={SettingsIcon} href="#" />
-      <SidebarIcon icon={LogOutIcon} href="#" />
+      <SidebarIcon icon={LogOutIcon} href="/auth" />
     </div>
   );
 }
