@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Financial Dashboard
 
-## Getting Started
+A React-based financial dashboard application that allows users to track their expenses, subscriptions, and overall financial health. The application fetches data from various APIs and displays it in a user-friendly interface.
 
-First, run the development server:
+## Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- [Features](#features)
+- [Technologies Used](#technologies-used)
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- User authentication and management
+- Expense tracking with detailed views
+- Subscription management
+- Data visualization for financial insights
+- Responsive design for mobile and desktop
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Technologies Used
 
-## Learn More
+- **Frontend**: React, TypeScript, Tailwind CSS
+- **State Management**: Zustand (or any other state management library)
+- **API**: RESTful APIs for fetching user, expenses, and subscription data
+- **Build Tool**: NextJS
 
-To learn more about Next.js, take a look at the following resources:
+## Installation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/StephCurry07/cosmoexpensetracker.git
+   cd cosmoexpensetracker
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-## Deploy on Vercel
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. Open your browser and navigate to `http://localhost:3000` (or the port specified in your terminal).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Usage
+
+- **Overview Page**: Displays a summary of user finances, including total income, expenses, and subscriptions.
+- **Expenses Page**: Allows users to add, view, and manage their expenses.
+- **Subscriptions Page**: Enables users to track their subscriptions and associated costs.
+
+### Adding Expenses
+
+1. Click the "Add New Expense" button.
+2. Fill in the required fields (title, amount, date, category).
+3. Click "Submit" to save the expense.
+
+### Adding Subscriptions
+
+1. Click the "Add New Subscription" button.
+2. Fill in the required fields (name, price, date, status).
+3. Click "Submit" to save the subscription.
+
+## API Endpoints
+
+- **User API**: `GET https://free-ap-south-1.cosmocloud.io/development/api/expensetrackeruser`
+- **Expenses API**: `GET https://free-ap-south-1.cosmocloud.io/development/api/expensetracker_expense`
+- **Subscriptions API**: `GET https://free-ap-south-1.cosmocloud.io/development/api/subscription`
+
+## Contributing
+
+Contributions are welcome! Please follow these steps to contribute:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/YourFeature`).
+3. Make your changes and commit them (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/YourFeature`).
+5. Open a pull request.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
